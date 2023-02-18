@@ -122,6 +122,7 @@ void add_process(process* p)
  */
 process* create_process(char* inputString)
 {
+
   /** YOUR CODE HERE */
   return NULL;
 }
@@ -148,7 +149,10 @@ int shell (int argc, char *argv[]) {
     fundex = lookup(t[0]); /* Is first token a shell literal */
     if(fundex >= 0) cmd_table[fundex].fun(&t[1]);
     else {
-      execv(t[0], t);
+      pid_t npid = fork();
+      if (pid_t == 0) {
+        execv(t[0], t);
+      }
     }
     // fprintf(stdout, "%d: ", lineNum);
   }
