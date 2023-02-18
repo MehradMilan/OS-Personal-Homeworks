@@ -148,7 +148,7 @@ int shell (int argc, char *argv[]) {
     fundex = lookup(t[0]); /* Is first token a shell literal */
     if(fundex >= 0) cmd_table[fundex].fun(&t[1]);
     else {
-      if(execv(t[0], t) != 0) {
+      if(t[0] != NULL && execv(t[0], t) != 0) {
         printf("%s: command not found\n", t[0]);
       }
     }
