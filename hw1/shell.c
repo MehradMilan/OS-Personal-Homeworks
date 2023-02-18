@@ -65,8 +65,11 @@ int cmd_pwd(tok_t arg[]) {
 int cmd_cd(tok_t arg[]) {
   char *addr = (char *)malloc(sizeof(arg[0]));
   strcpy(addr, arg[0]);
-  if(chdir(addr) != 0)
+  if(chdir(addr) != 0) {
     printf("cd: %s: No such file or directory\n", addr);
+    return -1;
+  }
+  return 1;
 }
 
 int lookup(char cmd[]) {
@@ -145,7 +148,9 @@ int shell (int argc, char *argv[]) {
     fundex = lookup(t[0]); /* Is first token a shell literal */
     if(fundex >= 0) cmd_table[fundex].fun(&t[1]);
     else {
-      fprintf(stdout, "This shell only supports built-ins. Replace this to run programs as commands.\n");
+      if(execv(t[0], t) != 0) {
+        printf("%s: command not found\n", t[0]);
+      }
     }
     // fprintf(stdout, "%d: ", lineNum);
   }
