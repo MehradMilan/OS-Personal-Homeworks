@@ -122,7 +122,6 @@ void add_process(process* p)
  */
 process* create_process(char* inputString)
 {
-
   /** YOUR CODE HERE */
   return NULL;
 }
@@ -150,7 +149,7 @@ int shell (int argc, char *argv[]) {
     if(fundex >= 0) cmd_table[fundex].fun(&t[1]);
     else {
       pid_t npid = fork();
-      if (pid_t == 0) {
+      if (npid == 0) {
         execv(t[0], t);
       }
     }
