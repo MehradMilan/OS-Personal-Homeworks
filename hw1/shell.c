@@ -151,16 +151,20 @@ char *get_exec_path(char *inputString) {
     return path;
   }
   else {
+    char *x = malloc(PATH_SIZE);
+    x = getenv("PATH");
     char *path = malloc(PATH_SIZE);
-    path = getenv("PATH");
+    strcpy(path, x);
     char *dir[ARRAY_SIZE];
-    extract_PATH(path, dir);
-    for (int i = 0; i < ARRAY_SIZE && dir[i]; i++) {
+    int l = extract_PATH(path, dir);
+    for (int i = 0; i < l; i++) {
       char *filename = malloc(PATH_SIZE);
       strcpy(filename, dir[i]);
       char *command = malloc(PATH_SIZE);
       strcpy(command, inputString);
-      char *p = strtok(command, " ");
+      tok_t *t;
+      t = getToks(command);
+      char *p = t[0];
       strcpy(filename, dir[i]);
       strcat(filename, "/");
       strcat(filename, p);
@@ -171,8 +175,8 @@ char *get_exec_path(char *inputString) {
         return filename;
       }
     }
-    return NULL;
   }
+  return NULL;
 }
 
 int extract_PATH(char *path, char **dir) {
@@ -182,9 +186,8 @@ int extract_PATH(char *path, char **dir) {
     dir[i++] = p;
     p = strtok(NULL, ":");
   }
-  return 0;
+  return i;
 }
-
 
 int shell (int argc, char *argv[]) {
   char *s = malloc(INPUT_STRING_SIZE+1);			/* user input string */
@@ -215,6 +218,8 @@ int shell (int argc, char *argv[]) {
       if (npid == 0) {
         launch_process(p);
       }
+      free(path);
+      free(inputString);
     }
     // fprintf(stdout, "%d: ", lineNum);
   }
