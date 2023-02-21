@@ -13,6 +13,8 @@
  */
 void launch_process(process *p)
 {
+  if(execv(p->argv[0], p->argv) != 0)
+    printf("%s: command not found\n", p->argv[0]);
   /** YOUR CODE HERE */
 }
 

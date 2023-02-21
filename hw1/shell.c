@@ -122,8 +122,24 @@ void add_process(process* p)
  */
 process* create_process(char* inputString)
 {
+  process *p =  (process *) malloc(sizeof(process));
+  p->stopped = 0;
+  p->completed = "";
+  p->background = "";
+  p->stdin = STDIN_FILENO;
+  p->stdout = STDOUT_FILENO;
+  p->stderr = STDERR_FILENO;
+  p->next = NULL;
+  p->prev = NULL;
+  tok_t *t;
+  t = getToks(inputString);
+  p->argv = t;
+  int i = 0;
+  while (t[i])
+    i++;
+  p->argc = i;
+  return p;
   /** YOUR CODE HERE */
-  return NULL;
 }
 
 
@@ -143,14 +159,17 @@ int shell (int argc, char *argv[]) {
 
   lineNum=0;
   // fprintf(stdout, "%d: ", lineNum);
-  while ((s = freadln(stdin))){
+  while ((s = freadln(stdin))) {
+    char *inputString = malloc(INPUT_STRING_SIZE+1);
+    strcpy(inputString, s);
     t = getToks(s); /* break the line into tokens */
     fundex = lookup(t[0]); /* Is first token a shell literal */
     if(fundex >= 0) cmd_table[fundex].fun(&t[1]);
     else {
+      process *p = create_process(inputString);
       pid_t npid = fork();
       if (npid == 0) {
-        execv(t[0], t);
+        launch_process(p);
       }
     }
     // fprintf(stdout, "%d: ", lineNum);
