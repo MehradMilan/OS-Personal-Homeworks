@@ -145,7 +145,7 @@ process* create_process(char* inputString)
 }
 
 char *get_exec_path(char *inputString) {
-  if (inputString[0] == '/') {
+  if (inputString[0] == '/' || inputString[0] == '.') {
     char *path = malloc(INPUT_STRING_SIZE+1);
     strcpy(path, inputString);
     return path;
@@ -218,8 +218,8 @@ int shell (int argc, char *argv[]) {
       if (npid == 0) {
         launch_process(p);
       }
-      free(path);
-      free(inputString);
+      // free(path);
+      // free(inputString);
     }
     // fprintf(stdout, "%d: ", lineNum);
   }
