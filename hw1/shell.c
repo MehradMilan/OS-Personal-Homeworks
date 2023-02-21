@@ -11,6 +11,8 @@
 #define FALSE 0
 #define TRUE 1
 #define INPUT_STRING_SIZE 80
+#define ARRAY_SIZE 20
+#define PATH_SIZE 256
 
 #include "io.h"
 #include "parse.h"
@@ -142,6 +144,46 @@ process* create_process(char* inputString)
   /** YOUR CODE HERE */
 }
 
+char *get_exec_path(char *inputString) {
+  if (inputString[0] == '/') {
+    char *path = malloc(INPUT_STRING_SIZE+1);
+    strcpy(path, inputString);
+    return path;
+  }
+  else {
+    char *path = malloc(PATH_SIZE);
+    path = getenv("PATH");
+    char *dir[ARRAY_SIZE];
+    extract_PATH(path, dir);
+    for (int i = 0; i < ARRAY_SIZE && dir[i]; i++) {
+      char *filename = malloc(PATH_SIZE);
+      strcpy(filename, dir[i]);
+      char *command = malloc(PATH_SIZE);
+      strcpy(command, inputString);
+      char *p = strtok(command, " ");
+      strcpy(filename, dir[i]);
+      strcat(filename, "/");
+      strcat(filename, p);
+      if(access(filename, F_OK) == 0) {
+        strcpy(filename, dir[i]);
+        strcat(filename, "/");   
+        strcat(filename, inputString);
+        return filename;
+      }
+    }
+    return NULL;
+  }
+}
+
+int extract_PATH(char *path, char **dir) {
+  int i = 0;
+  char *p = strtok(path, ":");
+  while(p != NULL) {
+    dir[i++] = p;
+    p = strtok(NULL, ":");
+  }
+  return 0;
+}
 
 
 int shell (int argc, char *argv[]) {
@@ -166,7 +208,9 @@ int shell (int argc, char *argv[]) {
     fundex = lookup(t[0]); /* Is first token a shell literal */
     if(fundex >= 0) cmd_table[fundex].fun(&t[1]);
     else {
-      process *p = create_process(inputString);
+      char *path = malloc(INPUT_STRING_SIZE+1);
+      path = get_exec_path(inputString);
+      process *p = create_process(path);
       pid_t npid = fork();
       if (npid == 0) {
         launch_process(p);
