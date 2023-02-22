@@ -7,6 +7,7 @@
 #include <termios.h>
 #include <sys/types.h>
 #include <sys/wait.h>
+#include <fcntl.h>
 
 #define FALSE 0
 #define TRUE 1
@@ -144,6 +145,42 @@ process* create_process(char* inputString)
   /** YOUR CODE HERE */
 }
 
+int set_input_redirect(process *p, int index) {
+  tok_t *t = p->argv;
+  int f_open = open(t[index+1], O_RDONLY);
+  if (f_open < 0) {
+    perror("File Error");
+    return -1;
+  }
+  else {
+    p->stdin = f_open;
+    t[index] = NULL;
+  }
+}
+
+int set_output_redirect(process *p, int index) {
+  tok_t *t = p->argv;
+  int f_open = open(t[index+1], O_WRONLY | O_TRUNC);
+  if (f_open < 0) {
+    perror("File Error");
+    return -1;
+  }
+  else {
+    p->stdout = f_open;
+    t[index] = NULL;
+  }
+}
+
+int redirect_io(process *p) {
+  int dir_index = isDirectTok(p->argv, "<");
+  if(dir_index != 0)
+    set_input_redirect(p, dir_index);
+  dir_index = isDirectTok(p->argv, ">");
+  if(dir_index != 0)
+    set_output_redirect(p, dir_index);
+  return 0;
+}
+
 char *get_exec_path(char *inputString) {
   if (inputString[0] == '/' || inputString[0] == '.') {
     char *path = malloc(INPUT_STRING_SIZE+1);
@@ -214,8 +251,10 @@ int shell (int argc, char *argv[]) {
       char *path = malloc(INPUT_STRING_SIZE+1);
       path = get_exec_path(inputString);
       process *p = create_process(path);
+      redirect_io(p);
       pid_t npid = fork();
       if (npid == 0) {
+        p->pid = getpid();
         launch_process(p);
       }
       // free(path);

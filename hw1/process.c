@@ -13,6 +13,10 @@
  */
 void launch_process(process *p)
 {
+  int e = dup2(p->stdin, STDIN_FILENO);
+  dup2(p->stdout, STDOUT_FILENO);
+  // close(p->stdin);
+  // close(p->stdout);
   if(execv(p->argv[0], p->argv) != 0)
     printf("%s: command not found\n", p->argv[0]);
   /** YOUR CODE HERE */
