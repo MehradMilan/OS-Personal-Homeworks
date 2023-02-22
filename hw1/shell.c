@@ -160,7 +160,7 @@ int set_input_redirect(process *p, int index) {
 
 int set_output_redirect(process *p, int index) {
   tok_t *t = p->argv;
-  int f_open = open(t[index+1], O_WRONLY | O_TRUNC);
+  int f_open = open(t[index+1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
   if (f_open < 0) {
     perror("File Error");
     return -1;

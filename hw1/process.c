@@ -13,7 +13,7 @@
  */
 void launch_process(process *p)
 {
-  int e = dup2(p->stdin, STDIN_FILENO);
+  dup2(p->stdin, STDIN_FILENO);
   dup2(p->stdout, STDOUT_FILENO);
   // close(p->stdin);
   // close(p->stdout);
