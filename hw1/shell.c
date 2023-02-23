@@ -156,6 +156,7 @@ int set_input_redirect(process *p, int index) {
     p->stdin = f_open;
     t[index] = NULL;
   }
+  return 0;
 }
 
 int set_output_redirect(process *p, int index) {
@@ -169,16 +170,18 @@ int set_output_redirect(process *p, int index) {
     p->stdout = f_open;
     t[index] = NULL;
   }
+  return 0;
 }
 
 int redirect_io(process *p) {
+  int flag = 0;
   int dir_index = isDirectTok(p->argv, "<");
   if(dir_index != 0)
-    set_input_redirect(p, dir_index);
+    flag = set_input_redirect(p, dir_index);
   dir_index = isDirectTok(p->argv, ">");
   if(dir_index != 0)
-    set_output_redirect(p, dir_index);
-  return 0;
+    flag = set_output_redirect(p, dir_index);
+  return flag;
 }
 
 char *get_exec_path(char *inputString) {
@@ -251,10 +254,10 @@ int shell (int argc, char *argv[]) {
       char *path = malloc(INPUT_STRING_SIZE+1);
       path = get_exec_path(inputString);
       process *p = create_process(path);
-      redirect_io(p);
+      int flag = redirect_io(p);
       pid_t npid = fork();
       if (npid == 0) {
-        p->pid = getpid();
+        // p->pid = getpid();
         launch_process(p);
       }
       // free(path);
