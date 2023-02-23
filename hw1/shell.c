@@ -113,16 +113,16 @@ void init_shell()
 }
 
 /**
- * Add a process to our process list
- */
+  * Add a process to our process list
+  */
 void add_process(process* p)
 {
   /** YOUR CODE HERE */
 }
 
 /**
- * Creates a process given the inputString from stdin
- */
+  * Creates a process given the inputString from stdin
+  */
 process* create_process(char* inputString)
 {
   process *p =  (process *) malloc(sizeof(process));
@@ -178,7 +178,6 @@ int redirect_io(process *p) {
   dir_index = isDirectTok(p->argv, ">");
   if(dir_index != 0)
     set_output_redirect(p, dir_index);
-  
   return 0;
 }
 
@@ -208,7 +207,7 @@ char *get_exec_path(char *inputString) {
       strcat(filename, p);
       if(access(filename, F_OK) == 0) {
         strcpy(filename, dir[i]);
-        strcat(filename, "/");
+        strcat(filename, "/");   
         strcat(filename, inputString);
         return filename;
       }
@@ -255,7 +254,7 @@ int shell (int argc, char *argv[]) {
       redirect_io(p);
       pid_t npid = fork();
       if (npid == 0) {
-        // p->pid = getpid();
+        p->pid = getpid();
         launch_process(p);
       }
       // free(path);
