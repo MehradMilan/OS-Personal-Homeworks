@@ -154,32 +154,31 @@ int set_input_redirect(process *p, int index) {
   }
   else {
     p->stdin = f_open;
-    dup2(p->stdin, STDIN_FILENO);
     t[index] = NULL;
   }
 }
 
 int set_output_redirect(process *p, int index) {
   tok_t *t = p->argv;
-  int f_open = open(t[index+1], O_WRONLY | O_CREAT | O_TRUNC, S_IRUSR | S_IWUSR);
+  int f_open = open(t[index+1], O_WRONLY | O_CREAT | O_TRUNC, 0777);
   if (f_open < 0) {
     perror("File Error");
     return -1;
   }
   else {
     p->stdout = f_open;
-    dup2(p->stdout, STDOUT_FILENO);
     t[index] = NULL;
   }
 }
 
 int redirect_io(process *p) {
-  int dir_index = isDirectTok(p->argv, ">");
-  if(dir_index != 0)
-    set_output_redirect(p, dir_index);
-  dir_index = isDirectTok(p->argv, "<");
+  int dir_index = isDirectTok(p->argv, "<");
   if(dir_index != 0)
     set_input_redirect(p, dir_index);
+  dir_index = isDirectTok(p->argv, ">");
+  if(dir_index != 0)
+    set_output_redirect(p, dir_index);
+  
   return 0;
 }
 
@@ -209,7 +208,7 @@ char *get_exec_path(char *inputString) {
       strcat(filename, p);
       if(access(filename, F_OK) == 0) {
         strcpy(filename, dir[i]);
-        strcat(filename, "/");   
+        strcat(filename, "/");
         strcat(filename, inputString);
         return filename;
       }
