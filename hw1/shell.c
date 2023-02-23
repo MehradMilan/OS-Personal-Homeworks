@@ -91,6 +91,14 @@ int lookup(char cmd[]) {
   return -1;
 }
 
+void set_signal_state(int STATE) {
+  signal(SIGINT, STATE);
+  signal(SIGQUIT, STATE);
+  signal(SIGTSTP, STATE);
+  signal(SIGTTIN, STATE);
+  signal(SIGTTOU, STATE);
+}
+
 void init_shell()
 {
   /* Check if we are running interactively */
@@ -116,6 +124,9 @@ void init_shell()
     /* Take control of the terminal */
     tcsetpgrp(shell_terminal, shell_pgid);
     tcgetattr(shell_terminal, &shell_tmodes);
+
+    set_signal_state(SIG_IGN);
+    // ignore_signals();
   }
   /** YOUR CODE HERE */
 }
@@ -123,9 +134,8 @@ void init_shell()
 /**
   * Add a process to our process list
   */
-void add_process(process* p)
-{
-  /** YOUR CODE HERE */
+void add_process(process *proc) {
+
 }
 
 /**
@@ -266,6 +276,8 @@ int shell (int argc, char *argv[]) {
   lineNum=0;
   // fprintf(stdout, "%d: ", lineNum);
   while ((s = freadln(stdin))) {
+    if(strcmp(s, "\n")==0)
+      continue;
     char *inputString = malloc(INPUT_STRING_SIZE+1);
     strcpy(inputString, s);
     t = getToks(s); /* break the line into tokens */
@@ -278,13 +290,18 @@ int shell (int argc, char *argv[]) {
       int flag = redirect_io(p);
       pid_t npid = fork();
       if (npid == 0) {
-        // p->pid = getpid();
+        // setpgrp();
+        // default_signals();
+        set_signal_state(SIG_DFL);
+        p->pid = getpid();
         launch_process(p);
       } else if (npid > 0) {
+        p->pid = npid;
         if(!p->background) {
-          tcsetpgrp(shell_terminal, cpid);
-          int status;
-          wait(&status);
+          setpgid(npid, npid);
+          tcsetpgrp(shell_terminal, npid);
+          // wait(NULL);
+          waitpid(p->pid, &p->status, WUNTRACED);
           tcsetpgrp(shell_terminal, shell_pgid);
           // put_process_in_foreground(p, 0);
         }

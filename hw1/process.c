@@ -30,10 +30,6 @@ void
 put_process_in_foreground (process *p, int cont)
 {
   /** YOUR CODE HERE */
-  // tcsetpgrp(shell_terminal, cpid);
-  // int status;
-  // wait(&status);
-  // tcsetpgrp(shell_terminal, shell_pgid);
 }
 
 /* Put a process in the background. If the cont argument is true, send
