@@ -290,20 +290,16 @@ int shell (int argc, char *argv[]) {
       int flag = redirect_io(p);
       pid_t npid = fork();
       if (npid == 0) {
-        // setpgrp();
-        // default_signals();
         set_signal_state(SIG_DFL);
         p->pid = getpid();
         launch_process(p);
       } else if (npid > 0) {
         p->pid = npid;
         if(!p->background) {
-          setpgid(npid, npid);
-          tcsetpgrp(shell_terminal, npid);
-          // wait(NULL);
+          setpgid(p->pid, p->pid);
+          tcsetpgrp(shell_terminal, p->pid);
           waitpid(p->pid, &p->status, WUNTRACED);
           tcsetpgrp(shell_terminal, shell_pgid);
-          // put_process_in_foreground(p, 0);
         }
       }
       // free(path);
