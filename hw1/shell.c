@@ -30,7 +30,7 @@ int cmd_help(tok_t arg[]);
 
 int cmd_pwd(tok_t arg[]);
 int cmd_cd(tok_t arg[]);
-
+int cmd_wait(tok_t arg[]);
 
 /* Command Lookup table */
 typedef int cmd_fun_t (tok_t args[]); /* cmd functions take token array and return int */
@@ -44,7 +44,8 @@ fun_desc_t cmd_table[] = {
   {cmd_help, "?", "show this help menu"},
   {cmd_quit, "quit", "quit the command shell"},
   {cmd_pwd, "pwd", "print working directory"},
-  {cmd_cd, "cd", "change working directory"}
+  {cmd_cd, "cd", "change working directory"},
+  {cmd_wait, "wait", "wait for background process"}
 };
 
 int cmd_help(tok_t arg[]) {
@@ -72,6 +73,13 @@ int cmd_cd(tok_t arg[]) {
     printf("cd: %s: No such file or directory\n", addr);
     return -1;
   }
+  return 1;
+}
+
+int cmd_wait(tok_t arg[]) {
+  pid_t pid;
+  int status;
+  pid = waitpid(-1, &status, 0);
   return 1;
 }
 
@@ -128,7 +136,7 @@ process* create_process(char* inputString)
   process *p =  (process *) malloc(sizeof(process));
   p->stopped = 0;
   p->completed = "";
-  p->background = "";
+  // p->background = "";
   p->stdin = STDIN_FILENO;
   p->stdout = STDOUT_FILENO;
   p->stderr = STDERR_FILENO;
@@ -141,6 +149,11 @@ process* create_process(char* inputString)
   while (t[i])
     i++;
   p->argc = i;
+  int b = is_background_process(p);
+  if (b > 0)
+    p->background = 1;
+  else
+    p->background = 0;
   return p;
   /** YOUR CODE HERE */
 }
@@ -182,6 +195,14 @@ int redirect_io(process *p) {
   if(dir_index != 0)
     flag = set_output_redirect(p, dir_index);
   return flag;
+}
+
+int is_background_process(process *p) {
+  tok_t *t = p->argv;
+  int index = isDirectTok(t, "&");
+  if(index > 0)
+    p->argv[index] = NULL;
+  return index;
 }
 
 char *get_exec_path(char *inputString) {
@@ -259,6 +280,14 @@ int shell (int argc, char *argv[]) {
       if (npid == 0) {
         // p->pid = getpid();
         launch_process(p);
+      } else if (npid > 0) {
+        if(!p->background) {
+          tcsetpgrp(shell_terminal, cpid);
+          int status;
+          wait(&status);
+          tcsetpgrp(shell_terminal, shell_pgid);
+          // put_process_in_foreground(p, 0);
+        }
       }
       // free(path);
       // free(inputString);
