@@ -66,10 +66,6 @@ void serve_file(int fd, char *path) {
     close(file_fd);
   }
 
-
-
-  /* TODO: PART 1 Bullet 2 */
-
 }
 
 void serve_directory(int fd, char *path) {
