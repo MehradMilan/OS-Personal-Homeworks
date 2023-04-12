@@ -90,8 +90,6 @@ void serve_directory(int fd, char *path) {
     free(message);
   }
   free(dir);
-  free(dirent);
-  /* TODO: PART 1 Bullet 3,4 */
 
 }
 
