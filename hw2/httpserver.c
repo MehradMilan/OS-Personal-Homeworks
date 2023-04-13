@@ -20,6 +20,7 @@
 
 #define PATH_LENGTH 4096
 #define BUFFER_SIZE 16384
+#define BUFF_SIZE 16384
 /*
  * Global configuration variables.
  * You need to use these in your implementation of handle_files_request and
@@ -40,33 +41,33 @@ int server_proxy_port;
  * 
  * ATTENTION: Be careful to optimize your code. Judge is
  *            sesnsitive to time-out errors.
- */
-void serve_file(int fd, char *path) {
+//  */
+// void serve_file(int fd, char *path) {
 
-  http_start_response(fd, 200);
-  http_send_header(fd, "Content-Type", http_get_mime_type(path));
+//   http_start_response(fd, 200);
+//   http_send_header(fd, "Content-Type", http_get_mime_type(path));
 
-  struct stat sb;
-  stat(path, &sb);
-  long c_size = sb.st_size;
-  char *content_length = malloc(128 * sizeof(char));
-  snprintf(content_length, 128, "%ld", c_size);
-  http_send_header(fd, "Content-Length", content_length); // Change this too
-  http_end_headers(fd);
+//   struct stat sb;
+//   stat(path, &sb);
+//   long c_size = sb.st_size;
+//   char *content_length = malloc(128 * sizeof(char));
+//   snprintf(content_length, 128, "%ld", c_size);
+//   http_send_header(fd, "Content-Length", content_length); // Change this too
+//   http_end_headers(fd);
 
-  int file_fd = open(path, O_RDONLY);
-  if (file_fd != -1) {
-    void *buffer = malloc(BUFFER_SIZE * sizeof(char));
-    size_t size;
-    while((size = read(file_fd, buffer, BUFFER_SIZE)) > 0) {
-       http_send_data(fd, buffer, size);
-    }
-    free(buffer);
-    free(content_length);
-    close(file_fd);
-  }
+//   int file_fd = open(path, O_RDONLY);
+//   if (file_fd != -1) {
+//     void *buffer = malloc(BUFFER_SIZE * sizeof(char));
+//     size_t size;
+//     while((size = read(file_fd, buffer, BUFFER_SIZE)) > 0) {
+//        http_send_data(fd, buffer, size);
+//     }
+//     free(buffer);
+//     free(content_length);
+//     close(file_fd);
+//   }
 
-}
+// }
 
 
 void write_file_to_client(int fd, char *path) {
@@ -81,6 +82,28 @@ void write_file_to_client(int fd, char *path) {
   }
   free(buffer);
   close(served_file);
+}
+
+/*
+ * Serves the contents the file stored at `path` to the client socket `fd`.
+ * It is the caller's responsibility to ensure that the file stored at `path` exists.
+ * You can change these functions to anything you want.
+ *
+ * ATTENTION: Be careful to optimize your code. Judge is
+ *            sensitive to time-out errors.
+ */
+
+void serve_file(int fd, char *path, struct stat *st) {
+  long size = st->st_size;
+  char *content_length_buff = malloc(64 * sizeof(char));
+  snprintf(content_length_buff, 64, "%ld", size);
+  http_start_response(fd, 200);
+  http_send_header(fd, "Content-Type", http_get_mime_type(path));
+  http_send_header(fd, "Content-Length", content_length_buff);
+  http_end_headers(fd);
+  write_file_to_client(fd, path);
+  free(content_length_buff);
+
 }
 
 /*
@@ -167,11 +190,11 @@ void handle_files_request(int fd) {
   int state = stat(path, &sb);
   if(!state) {
     if(S_ISREG(sb.st_mode)) {
-      serve_file(fd, path);
+      serve_file(fd, path, &sb);
     } else if(S_ISDIR(sb.st_mode)) {
       char *file_path = check_directory_contain_file(path, sb);
       if(file_path != NULL) {
-        serve_file(fd, file_path);
+        serve_file(fd, file_path, &sb);
       } else {
         serve_directory(fd, path);
       }
