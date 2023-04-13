@@ -19,7 +19,7 @@
 #include "wq.h"
 
 #define PATH_LENGTH 4096
-#define BUFFER_SIZE 1024
+#define BUFFER_SIZE 16384
 /*
  * Global configuration variables.
  * You need to use these in your implementation of handle_files_request and
@@ -61,17 +61,37 @@ void serve_file(int fd, char *path) {
     while((size = read(file_fd, buffer, BUFFER_SIZE)) > 0) {
        http_send_data(fd, buffer, size);
     }
-    // while(c_size > 0) {
-    //   size_t size = read(file_fd, buffer, BUFFER_SIZE);
-    //   http_send_data(fd, buffer, size);
-    //   c_size -= BUFFER_SIZE;
-    // }
     free(buffer);
     free(content_length);
     close(file_fd);
   }
 
 }
+
+
+void write_file_to_client(int fd, char *path) {
+  int served_file = open(path, O_RDONLY);
+  if (served_file == -1) {
+    return;
+  }
+  void *buffer = malloc((BUFF_SIZE) * sizeof(char));
+  size_t size;
+  while ((size = read(served_file, buffer, BUFF_SIZE)) > 0) {
+    http_send_data(fd, buffer, size);
+  }
+  free(buffer);
+  close(served_file);
+}
+
+/*
+ * Serves the contents the file stored at `path` to the client socket `fd`.
+ * It is the caller's responsibility to ensure that the file stored at `path` exists.
+ * You can change these functions to anything you want.
+ *
+ * ATTENTION: Be careful to optimize your code. Judge is
+ *            sensitive to time-out errors.
+ */
+
 
 void serve_directory(int fd, char *path) {
   http_start_response(fd, 200);
@@ -96,7 +116,7 @@ void serve_directory(int fd, char *path) {
 char *check_directory_contain_file(char *path, struct stat sb) {
   char *file_path = malloc(PATH_LENGTH);
   strcpy(file_path, path);
-  strcat(file_path, "index.html");
+  strcat(file_path, "/index.html");
   if(!stat(file_path, &sb))
     return file_path;
   else return NULL;
