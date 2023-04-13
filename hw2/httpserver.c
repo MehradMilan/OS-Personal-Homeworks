@@ -76,14 +76,13 @@ void serve_directory(int fd, char *path) {
   DIR *dir = opendir(path);
   struct dirent *dirent;
   if(dir) {
-    int message_size = strlen("<a href=./></a><br>\n") + strlen(dfile->d_name)*2 + 1;
-    char *message = malloc(message_size * sizeof(char));
-    dirent = readdir(dir);
-    while(dirent != NULL) {
+    while((dirent = readdir(dir)) != NULL) {
+      int message_size = strlen("<a href=./></a><br>\n") + strlen(dirent->d_name)*2 + 1;
+      char *message = malloc(message_size * sizeof(char));
       snprintf(message, message_size, "<a href='./%s'>%s</a><br>\n", dirent->d_name, dirent->d_name);
       http_send_string(fd, message);
+      free(message);
     }
-    free(message);
   }
   free(dir);
 
@@ -249,11 +248,25 @@ void handle_proxy_request(int fd) {
   */
 }
 
+void *thread_start(void *handler) {
+  void (*request_handler)(int) = handler;
+  while(1) {
+    int fd = wq_pop(&work_queue);
+    request_handler(fd);
+    close(fd);
+  }
+}
+
 
 void init_thread_pool(int num_threads, void (*request_handler)(int)) {
   /*
    * TODO: Part of your solution for Task 2 goes here!
    */
+  wq_init(&work_queue);
+  pthread_t thread_pool[num_threads];
+  for (int i = 0; i < num_threads; i++) {
+    pthread_create(&thread_pool[i], NULL, thread_start, request_handler);
+  }
 }
 
 /*
@@ -314,8 +327,12 @@ void serve_forever(int *socket_number, void (*request_handler)(int)) {
         client_address.sin_port);
 
     // TODO: Change me?
-    request_handler(client_socket_number);
-    close(client_socket_number);
+    if (num_threads > 0) {
+      wq_push(&work_queue, client_socket_number);
+    } else {
+      request_handler(client_socket_number);
+      close(client_socket_number);
+    }
 
     printf("Accepted connection from %s on port %d\n",
         inet_ntoa(client_address.sin_addr),
