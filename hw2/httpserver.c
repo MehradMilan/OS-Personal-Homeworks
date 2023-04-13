@@ -33,6 +33,13 @@ char *server_files_directory;
 char *server_proxy_hostname;
 int server_proxy_port;
 
+typedef struct proxy_state {
+  int src_fd;
+  int dst_fd;
+  pthread_cond_t *cond;
+  int is_alive;
+} proxy_state;
+
 /*
  * Serves the contents the file stored at `path` to the client socket `fd`.
  * It is the caller's reponsibility to ensure that the file stored at `path` exists.
@@ -178,12 +185,21 @@ void handle_files_request(int fd) {
    *  
    * Feel FREE to delete/modify anything on this function.
    */
-
-  close(fd);
-  free(path);
-  return;
+  
 }
 
+void *serve_proxy(void *p_state) {
+  proxy_state *state = (proxy_state *) p_state;
+  void *buff = malloc(BUFFER_SIZE);
+  size_t size;
+  while ((size = read(state->src_fd, buff, BUFFER_SIZE)) > 0) {
+    http_send_data(state->dst_fd, buff, size);
+  }
+  free(buff);
+  state->is_alive = 0;
+  pthread_cond_signal(state->cond);
+  return NULL;
+}
 
 /*
  * Opens a connection to the proxy target (hostname=server_proxy_hostname and
@@ -243,6 +259,42 @@ void handle_proxy_request(int fd) {
     return;
 
   }
+
+  pthread_mutex_t mutex = PTHREAD_MUTEX_INITIALIZER;
+  pthread_cond_t cond = PTHREAD_COND_INITIALIZER;
+
+  pthread_t proxy_threads[2];
+
+  proxy_state *request = malloc(sizeof(proxy_state));
+  request->src_fd = fd;
+  request->dst_fd = target_fd;
+  request->cond = &cond;
+  request->is_alive = 1;
+  pthread_create(&proxy_threads[0], NULL, serve_proxy, request);
+
+  proxy_state *response = malloc(sizeof(proxy_state));
+  response->src_fd = target_fd;
+  response->dst_fd = fd;
+  response->cond = &cond;
+  response->is_alive = 1;
+  pthread_create(&proxy_threads[1], NULL, serve_proxy, response);
+
+  while (request->is_alive && response->is_alive) {
+    pthread_cond_wait(&cond, &mutex);
+  }
+
+  pthread_cancel(proxy_threads[0]);
+  pthread_cancel(proxy_threads[1]);
+
+  pthread_mutex_destroy(&mutex);
+  pthread_cond_destroy(&cond);
+
+  free(request);
+  free(response);
+
+  close(target_fd);
+  close(fd);
+  return;
 
   /* 
   * TODO: Your solution for task 3 belongs here! 
