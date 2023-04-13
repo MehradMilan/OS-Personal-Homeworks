@@ -190,14 +190,14 @@ void handle_files_request(int fd) {
 
 void *serve_proxy(void *p_state) {
   proxy_state *state = (proxy_state *) p_state;
-  void *buffer = malloc(BUFFER_SIZE);
+  void *buff = malloc(BUFFER_SIZE);
   size_t size;
-  while ((size = read(state->src_fd, buffer, BUFFER_SIZE)) > 0) {
-    http_send_data(state->dst_fd, buffer, size);
+  while ((size = read(state->src_fd, buff, BUFFER_SIZE)) > 0) {
+    http_send_data(state->dst_fd, buff, size);
   }
+  free(buff);
   state->is_alive = 0;
   pthread_cond_signal(state->cond);
-  free(buffer);
   return NULL;
 }
 
