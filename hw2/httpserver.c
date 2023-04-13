@@ -48,21 +48,26 @@ void serve_file(int fd, char *path) {
 
   struct stat sb;
   stat(path, &sb);
-  long int c_size = sb.st_size;
-  char *content_length = malloc(sizeof(long int) * sizeof(char));
-  snprintf(content_length, sizeof(long int), "%ld", c_size);
+  long c_size = sb.st_size;
+  char *content_length = malloc(128 * sizeof(char));
+  snprintf(content_length, 128, "%ld", c_size);
   http_send_header(fd, "Content-Length", content_length); // Change this too
   http_end_headers(fd);
 
   int file_fd = open(path, O_RDONLY);
   if (file_fd != -1) {
     void *buffer = malloc(BUFFER_SIZE * sizeof(char));
-    while(c_size > 0) {
-      size_t size = read(file_fd, buffer, BUFFER_SIZE);
-      http_send_data(fd, buffer, size);
-      c_size -= BUFFER_SIZE;
+    size_t size;
+    while((size = read(file_fd, buffer, BUFFER_SIZE)) > 0) {
+       http_send_data(fd, buffer, size);
     }
+    // while(c_size > 0) {
+    //   size_t size = read(file_fd, buffer, BUFFER_SIZE);
+    //   http_send_data(fd, buffer, size);
+    //   c_size -= BUFFER_SIZE;
+    // }
     free(buffer);
+    free(content_length);
     close(file_fd);
   }
 
