@@ -190,14 +190,14 @@ void handle_files_request(int fd) {
 
 void *serve_proxy(void *p_state) {
   proxy_state *state = (proxy_state *) p_state;
-  void *buff = malloc(BUFFER_SIZE);
+  void *buffer = malloc(BUFFER_SIZE);
   size_t size;
-  while ((size = read(state->src_fd, buff, BUFFER_SIZE)) > 0) {
-    http_send_data(state->dst_fd, buff, size);
+  while ((size = read(state->src_fd, buffer, BUFFER_SIZE)) > 0) {
+    http_send_data(state->dst_fd, buffer, size);
   }
-  free(buff);
   state->is_alive = 0;
   pthread_cond_signal(state->cond);
+  free(buffer);
   return NULL;
 }
 
@@ -212,6 +212,16 @@ void *serve_proxy(void *p_state) {
  *   | client | <-> | httpserver | <-> | proxy target |
  *   +--------+     +------------+     +--------------+
  */
+
+proxy_state *init_proxy_state(int fd, int target_fd, pthread_cond_t cond) {
+  proxy_state *p_state = malloc(sizeof(proxy_state));
+  p_state->src_fd = fd;
+  p_state->dst_fd = target_fd;
+  p_state->cond = &cond;
+  p_state->is_alive = 1;
+  return p_state;
+}
+
 void handle_proxy_request(int fd) {
 
   /*
@@ -265,18 +275,10 @@ void handle_proxy_request(int fd) {
 
   pthread_t proxy_threads[2];
 
-  proxy_state *request = malloc(sizeof(proxy_state));
-  request->src_fd = fd;
-  request->dst_fd = target_fd;
-  request->cond = &cond;
-  request->is_alive = 1;
+  proxy_state *request = init_proxy_state(fd, target_fd, cond);
   pthread_create(&proxy_threads[0], NULL, serve_proxy, request);
 
-  proxy_state *response = malloc(sizeof(proxy_state));
-  response->src_fd = target_fd;
-  response->dst_fd = fd;
-  response->cond = &cond;
-  response->is_alive = 1;
+  proxy_state *response = init_proxy_state(fd, target_fd, cond);
   pthread_create(&proxy_threads[1], NULL, serve_proxy, response);
 
   while (request->is_alive && response->is_alive) {
