@@ -37,7 +37,6 @@ void split_block (s_block_ptr b, size_t s) {
 
 /* Try fusing block with neighbors */
 s_block_ptr fusion(s_block_ptr b) {
-    // Fuse with next block if it's free
     if (b->next != NULL && b->next->is_free) {
         b->size = b->size + BLOCK_SIZE + b->next->size;
         b->next = b->next->next;
@@ -46,7 +45,6 @@ s_block_ptr fusion(s_block_ptr b) {
         }
     }
 
-    // Fuse with previous block if it's free
     if (b->prev != NULL && b->prev->is_free) {
         b->prev->size = b->prev->size + BLOCK_SIZE + b->size;
         b->prev->next = b->next;
