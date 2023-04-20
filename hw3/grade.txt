@@ -1,50 +1,94 @@
-I finished judging your code on 20-04-2023 at 16:49:36.
+I finished judging your code on 20-04-2023 at 16:59:26.
 
-Compile error...
+I ran your code on each test case separately! You can see the results below:
 
+================================================================================================================
+Test 1: Simple test of alloc and free --> OK! 1.95 points; Afarin!!!
+================================================================================================================
+
+
+================================================================================================================
+Test 2: Test of exceptional cases --> Runtime error occurred (Exit code: -11)
+Although you got no points from this test, below is the output of the test (STDOUT):
 ----------<BEGIN AUTO GENERATED OUTPUT>-----------
 
-mm_alloc.c: In function ‘split_block’:
-mm_alloc.c:20:21: error: redefinition of ‘new_block’
-   20 |         s_block_ptr new_block = ((void *)b + BLOCK_SIZE) + s;
-      |                     ^~~~~~~~~
-mm_alloc.c:19:21: note: previous definition of ‘new_block’ was here
-   19 |         s_block_ptr new_block = NULL;
-      |                     ^~~~~~~~~
-mm_alloc.c:34:9: warning: implicit declaration of function ‘memset’ [-Wimplicit-function-declaration]
-   34 |         memset(b->ptr, 0, b->size);
-      |         ^~~~~~
-mm_alloc.c:34:9: warning: incompatible implicit declaration of built-in function ‘memset’
-mm_alloc.c:9:1: note: include ‘<string.h>’ or provide a declaration of ‘memset’
-    8 | #include "mm_alloc.h"
-  +++ |+#include <string.h>
-    9 | 
-mm_alloc.c: In function ‘get_block’:
-mm_alloc.c:69:53: warning: implicit declaration of function ‘sbrk’ [-Wimplicit-function-declaration]
-   69 |     if (p >= (void *)list_head + BLOCK_SIZE && p <= sbrk(0)) {
-      |                                                     ^~~~
-mm_alloc.c:69:50: warning: comparison between pointer and integer
-   69 |     if (p >= (void *)list_head + BLOCK_SIZE && p <= sbrk(0)) {
-      |                                                  ^~
-mm_alloc.c:71:21: error: redefinition of ‘block’
-   71 |         s_block_ptr block = (s_block_ptr)(p - BLOCK_SIZE);
-      |                     ^~~~~
-mm_alloc.c:70:21: note: previous definition of ‘block’ was here
-   70 |         s_block_ptr block = NULL;
-      |                     ^~~~~
-mm_alloc.c: In function ‘extend_heap’:
-mm_alloc.c:83:15: warning: initialization of ‘void *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
-   83 |     void *p = sbrk(0);  // Get the current program break
-      |               ^~~~
-mm_alloc.c:86:30: warning: comparison between pointer and integer
-   86 |     if (sbrk(s + BLOCK_SIZE) == (void *)-1) {
-      |                              ^~
-mm_alloc.c:99:5: warning: incompatible implicit declaration of built-in function ‘memset’
-   99 |     memset(new_block->ptr, 0, new_block->size);
-      |     ^~~~~~
-mm_alloc.c:99:5: note: include ‘<string.h>’ or provide a declaration of ‘memset’
-make[1]: *** [Makefile:26: mm_alloc.o] Error 1
-make: *** [Makefile:20: hard] Error 2
 
 -----------<END AUTO GENERATED OUTPUT>------------
-Your final grade is: 0/100.0epoch: 1682009376
+================================================================================================================
+
+
+================================================================================================================
+Test 3: Fusion simple test --> OK! 4.5 points; Afarin!!!
+================================================================================================================
+
+
+================================================================================================================
+Test 4: Fusion complicated test --> OK! 11.5 points; Afarin!!!
+================================================================================================================
+
+
+================================================================================================================
+Test 5: Split block simple test --> Runtime error occurred (Exit code: 1)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+Ok I just assured that you couldn't allocated 800 GB.
+Apparently Split block is not working
+
+-----------<END AUTO GENERATED OUTPUT>------------
+================================================================================================================
+
+
+================================================================================================================
+Test 6: Test large amount of data --> OK! 10 points; Afarin!!!
+================================================================================================================
+
+
+================================================================================================================
+Test 7: A combination of fusion and split block --> Runtime error occurred (Exit code: 1)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+Ok I just assured that you couldn't allocated 800 GB.
+Step 3 failed: I guess split block isn't working properly
+
+-----------<END AUTO GENERATED OUTPUT>------------
+================================================================================================================
+
+
+================================================================================================================
+Test 8: Realloc simple test --> Runtime error occurred (Exit code: -11)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+
+-----------<END AUTO GENERATED OUTPUT>------------
+================================================================================================================
+
+
+================================================================================================================
+Test 9: Realloc complicated test --> Runtime error occurred (Exit code: 1)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+Ok I just assured that you couldn't allocated 800 GB.
+You must have been able to realloc
+
+-----------<END AUTO GENERATED OUTPUT>------------
+================================================================================================================
+
+
+================================================================================================================
+Test 10: Two dimensional array with arithmetic calculations on a real-world problem --> Runtime error occurred (Exit code: 1)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+Ok you have allocated the array so far.
+Your answer is correct.
+Now we're gonna test with some reallocs!
+You couldn't realloc.
+
+-----------<END AUTO GENERATED OUTPUT>------------
+================================================================================================================
+
+Your final grade is: 27.95/100.0epoch: 1682009967
