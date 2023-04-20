@@ -7,7 +7,9 @@
 
 #include "mm_alloc.h"
 
+#include <memory.h>
 #include <stdlib.h>
+#include <unistd.h>
 
 s_block_ptr list_head = NULL;
 
@@ -17,7 +19,7 @@ void split_block (s_block_ptr b, size_t s) {
         return;
     if(b->size - s >= BLOCK_SIZE) {
         s_block_ptr new_block = NULL;
-        s_block_ptr new_block = ((void *)b + BLOCK_SIZE) + s;
+        new_block = ((void *)b + BLOCK_SIZE) + s;
         if (b->next) {
             (b->next)->prev = new_block;
         }
@@ -68,7 +70,7 @@ s_block_ptr get_block (void *p) {
 
     if (p >= (void *)list_head + BLOCK_SIZE && p <= sbrk(0)) {
         s_block_ptr block = NULL;
-        s_block_ptr block = (s_block_ptr)(p - BLOCK_SIZE);
+        block = (s_block_ptr)(p - BLOCK_SIZE);
         return block;
     }
 
