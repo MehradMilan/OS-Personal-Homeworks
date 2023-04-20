@@ -1,12 +1,50 @@
-I finished judging your code on 20-04-2023 at 16:44:55.
+I finished judging your code on 20-04-2023 at 16:49:36.
 
 Compile error...
 
 ----------<BEGIN AUTO GENERATED OUTPUT>-----------
 
-There is an occurrence of 'malloc' in 'mm_alloc.h' which is not allowed! Remove it and then submit again.\nPlease note that you have to completely remove the usages; commenting them out won't solve the problem! Because we search the file like CTRL+F
-There is an occurrence of 'free' in 'mm_alloc.c' which is not allowed! Remove it and then submit again.\nPlease note that you have to completely remove the usages; commenting them out won't solve the problem! Because we search the file like CTRL+F
-make: *** [Makefile:20: hard] Error 1
+mm_alloc.c: In function ‘split_block’:
+mm_alloc.c:20:21: error: redefinition of ‘new_block’
+   20 |         s_block_ptr new_block = ((void *)b + BLOCK_SIZE) + s;
+      |                     ^~~~~~~~~
+mm_alloc.c:19:21: note: previous definition of ‘new_block’ was here
+   19 |         s_block_ptr new_block = NULL;
+      |                     ^~~~~~~~~
+mm_alloc.c:34:9: warning: implicit declaration of function ‘memset’ [-Wimplicit-function-declaration]
+   34 |         memset(b->ptr, 0, b->size);
+      |         ^~~~~~
+mm_alloc.c:34:9: warning: incompatible implicit declaration of built-in function ‘memset’
+mm_alloc.c:9:1: note: include ‘<string.h>’ or provide a declaration of ‘memset’
+    8 | #include "mm_alloc.h"
+  +++ |+#include <string.h>
+    9 | 
+mm_alloc.c: In function ‘get_block’:
+mm_alloc.c:69:53: warning: implicit declaration of function ‘sbrk’ [-Wimplicit-function-declaration]
+   69 |     if (p >= (void *)list_head + BLOCK_SIZE && p <= sbrk(0)) {
+      |                                                     ^~~~
+mm_alloc.c:69:50: warning: comparison between pointer and integer
+   69 |     if (p >= (void *)list_head + BLOCK_SIZE && p <= sbrk(0)) {
+      |                                                  ^~
+mm_alloc.c:71:21: error: redefinition of ‘block’
+   71 |         s_block_ptr block = (s_block_ptr)(p - BLOCK_SIZE);
+      |                     ^~~~~
+mm_alloc.c:70:21: note: previous definition of ‘block’ was here
+   70 |         s_block_ptr block = NULL;
+      |                     ^~~~~
+mm_alloc.c: In function ‘extend_heap’:
+mm_alloc.c:83:15: warning: initialization of ‘void *’ from ‘int’ makes pointer from integer without a cast [-Wint-conversion]
+   83 |     void *p = sbrk(0);  // Get the current program break
+      |               ^~~~
+mm_alloc.c:86:30: warning: comparison between pointer and integer
+   86 |     if (sbrk(s + BLOCK_SIZE) == (void *)-1) {
+      |                              ^~
+mm_alloc.c:99:5: warning: incompatible implicit declaration of built-in function ‘memset’
+   99 |     memset(new_block->ptr, 0, new_block->size);
+      |     ^~~~~~
+mm_alloc.c:99:5: note: include ‘<string.h>’ or provide a declaration of ‘memset’
+make[1]: *** [Makefile:26: mm_alloc.o] Error 1
+make: *** [Makefile:20: hard] Error 2
 
 -----------<END AUTO GENERATED OUTPUT>------------
-Your final grade is: 0/100.0epoch: 1682009095
+Your final grade is: 0/100.0epoch: 1682009376
