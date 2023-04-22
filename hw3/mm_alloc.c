@@ -144,7 +144,30 @@ void *mm_malloc(size_t size) {
 
 void* mm_realloc(void* ptr, size_t size)
 {
+    if (size == 0 && ptr == NULL) {
+        return NULL;
+    } else if (size == 0) {
+        mm_free(ptr);
+        return NULL;
+    } else if (ptr == NULL) {
+        return mm_malloc(size);
+    }
+
+    current_block = get_block(ptr);
+    if (current_block) {
+        void *new_block = mm_malloc(size);
+        if (new_block == NULL)
+            return NULL;
+        size_t s = size;
+        if (current_block->size < s) {
+            s = current_block ->size;
+        }
+        memcpy(new_block, ptr, s);
+        mm_free(ptr);
+        return new_block;
+    }
     return NULL;
+
 }
 
 void mm_free(void* ptr) 
