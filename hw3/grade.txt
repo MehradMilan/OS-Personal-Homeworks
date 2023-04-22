@@ -1,17 +1,68 @@
-I finished judging your code on 22-04-2023 at 11:05:06.
+I finished judging your code on 22-04-2023 at 11:08:02.
 
-Compile error...
+I ran your code on each test case separately! You can see the results below:
 
+================================================================================================================
+Test 1: Simple test of alloc and free --> OK! 1.95 points; Afarin!!!
+================================================================================================================
+
+
+================================================================================================================
+Test 2: Test of exceptional cases --> OK! 2.15 points; Afarin!!!
+================================================================================================================
+
+
+================================================================================================================
+Test 3: Fusion simple test --> OK! 4.5 points; Afarin!!!
+================================================================================================================
+
+
+================================================================================================================
+Test 4: Fusion complicated test --> OK! 11.5 points; Afarin!!!
+================================================================================================================
+
+
+================================================================================================================
+Test 5: Split block simple test --> Runtime error occurred (Exit code: 1)
+Although you got no points from this test, below is the output of the test (STDOUT):
 ----------<BEGIN AUTO GENERATED OUTPUT>-----------
 
-mm_alloc.c: In function ‘mm_realloc’:
-mm_alloc.c:156:5: error: ‘current_block’ undeclared (first use in this function); did you mean ‘get_block’?
-  156 |     current_block = get_block(ptr);
-      |     ^~~~~~~~~~~~~
-      |     get_block
-mm_alloc.c:156:5: note: each undeclared identifier is reported only once for each function it appears in
-make[1]: *** [Makefile:26: mm_alloc.o] Error 1
-make: *** [Makefile:20: hard] Error 2
+Ok I just assured that you couldn't allocated 800 GB.
+Apparently Split block is not working
 
 -----------<END AUTO GENERATED OUTPUT>------------
-Your final grade is: 0/100.0epoch: 1682161507
+================================================================================================================
+
+
+================================================================================================================
+Test 6: Test large amount of data --> OK! 10 points; Afarin!!!
+================================================================================================================
+
+
+================================================================================================================
+Test 7: A combination of fusion and split block --> Runtime error occurred (Exit code: 1)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+Ok I just assured that you couldn't allocated 800 GB.
+Step 3 failed: I guess split block isn't working properly
+
+-----------<END AUTO GENERATED OUTPUT>------------
+================================================================================================================
+
+
+================================================================================================================
+Test 8: Realloc simple test --> OK! 6.1 points; Afarin!!!
+================================================================================================================
+
+
+================================================================================================================
+Test 9: Realloc complicated test --> OK! 17.5 points; Afarin!!!
+================================================================================================================
+
+
+================================================================================================================
+Test 10: Two dimensional array with arithmetic calculations on a real-world problem --> OK! 13.8 points; Afarin!!!
+================================================================================================================
+
+Your final grade is: 67.5/100.0epoch: 1682161682
