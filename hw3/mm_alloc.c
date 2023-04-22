@@ -14,24 +14,23 @@
 s_block_ptr list_head = NULL;
 
 /* Split block according to size, b must exist */
-void split_block (s_block_ptr b, size_t s)
-{
-    if (b == NULL || s <= 0) {
+void split_block (s_block_ptr b, size_t s) {
+    if (b == NULL || s <= 0)
         return;
-    }
-
-    if(b->size >= s + BLOCK_SIZE) {
-        s_block_ptr p = (s_block_ptr) (b->ptr + s);
-        p->prev = b;
+    if(b->size - s >= BLOCK_SIZE) {
+        s_block_ptr new_block = NULL;
+        new_block = ((void *)b + BLOCK_SIZE) + s;
+        new_block->prev = b;
         if (b->next) {
-            (b->next)->prev = p;
+            (b->next)->prev = new_block;
         }
-        p->next = b->next;
-        b->next = p;
-        p->size = b->size - s - BLOCK_SIZE;
-        p->ptr = b->ptr + s + BLOCK_SIZE;
+        new_block->next = b->next;
+        b->next = new_block;
+        new_block->size = b->size - s - BLOCK_SIZE;
+        new_block->ptr = b->ptr + s + BLOCK_SIZE;
         b->size = s;
-        mm_free(p->ptr);
+        new_block->is_free = 1;
+        mm_free(new_block->ptr);
         memset(b->ptr, 0, b->size);
     }
 }
@@ -111,7 +110,10 @@ void *mm_malloc(size_t size) {
 
     if (list_head == NULL) {
         s_block_ptr init_block = extend_heap(NULL, 0);
-        return init_block;
+        if (!init_block) {
+            return NULL;
+        }
+        list_head = init_block;
     }
 
     s_block_ptr curr = list_head;
