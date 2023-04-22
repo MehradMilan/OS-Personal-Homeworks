@@ -20,17 +20,19 @@ void split_block (s_block_ptr b, size_t s) {
     if(b->size - s >= BLOCK_SIZE) {
         s_block_ptr new_block = NULL;
         new_block = ((void *)b + BLOCK_SIZE) + s;
+        new_block->prev = b;
         if (b->next) {
             (b->next)->prev = new_block;
         }
-        new_block->prev = b;
         new_block->next = b->next;
+        b->next = new_block;
         new_block->size = b->size - s - BLOCK_SIZE;
         new_block->ptr = b->ptr + s + BLOCK_SIZE;
-        new_block->is_free = 1;
-
-        b->next = new_block;
         b->size = s;
+        // new_block->is_free = 1;
+
+        
+        
 
         mm_free(new_block->ptr);
         memset(b->ptr, 0, b->size);
