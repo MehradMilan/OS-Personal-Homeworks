@@ -1,24 +1,50 @@
-I finished judging your code on 22-04-2023 at 11:15:52.
+I finished judging your code on 22-04-2023 at 11:22:12.
 
 I ran your code on each test case separately! You can see the results below:
 
 ================================================================================================================
-Test 1: Simple test of alloc and free --> OK! 1.95 points; Afarin!!!
+Test 1: Simple test of alloc and free --> Runtime error occurred (Exit code: 1)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+Malloc didn't crash!
+Bug in malloc!
+
+-----------<END AUTO GENERATED OUTPUT>------------
 ================================================================================================================
 
 
 ================================================================================================================
-Test 2: Test of exceptional cases --> OK! 2.15 points; Afarin!!!
+Test 2: Test of exceptional cases --> Runtime error occurred (Exit code: -11)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+
+-----------<END AUTO GENERATED OUTPUT>------------
 ================================================================================================================
 
 
 ================================================================================================================
-Test 3: Fusion simple test --> OK! 4.5 points; Afarin!!!
+Test 3: Fusion simple test --> Runtime error occurred (Exit code: 1)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+Ok I just assured that you couldn't allocated 800 GB.
+I guess fusion is not working...
+
+-----------<END AUTO GENERATED OUTPUT>------------
 ================================================================================================================
 
 
 ================================================================================================================
-Test 4: Fusion complicated test --> OK! 11.5 points; Afarin!!!
+Test 4: Fusion complicated test --> Runtime error occurred (Exit code: 1)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+Ok I just assured that you couldn't allocated 800 GB.
+I guess fusion is not working...
+
+-----------<END AUTO GENERATED OUTPUT>------------
 ================================================================================================================
 
 
@@ -28,14 +54,21 @@ Although you got no points from this test, below is the output of the test (STDO
 ----------<BEGIN AUTO GENERATED OUTPUT>-----------
 
 Ok I just assured that you couldn't allocated 800 GB.
-Apparently Split block is not working
+After free you must be able to allocate for me
 
 -----------<END AUTO GENERATED OUTPUT>------------
 ================================================================================================================
 
 
 ================================================================================================================
-Test 6: Test large amount of data --> OK! 10 points; Afarin!!!
+Test 6: Test large amount of data --> Runtime error occurred (Exit code: -11)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+Ok I just assured that you couldn't allocated 800 GB.
+You passed the first step...
+
+-----------<END AUTO GENERATED OUTPUT>------------
 ================================================================================================================
 
 
@@ -45,24 +78,43 @@ Although you got no points from this test, below is the output of the test (STDO
 ----------<BEGIN AUTO GENERATED OUTPUT>-----------
 
 Ok I just assured that you couldn't allocated 800 GB.
-Step 3 failed: I guess split block isn't working properly
+Step 1 failed: I guess fusion isn't working properly.
 
 -----------<END AUTO GENERATED OUTPUT>------------
 ================================================================================================================
 
 
 ================================================================================================================
-Test 8: Realloc simple test --> OK! 6.1 points; Afarin!!!
+Test 8: Realloc simple test --> Runtime error occurred (Exit code: -11)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+
+-----------<END AUTO GENERATED OUTPUT>------------
 ================================================================================================================
 
 
 ================================================================================================================
-Test 9: Realloc complicated test --> OK! 17.5 points; Afarin!!!
+Test 9: Realloc complicated test --> Runtime error occurred (Exit code: 1)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+Ok I just assured that you couldn't allocated 800 GB.
+I guess fusion is not working...
+
+-----------<END AUTO GENERATED OUTPUT>------------
 ================================================================================================================
 
 
 ================================================================================================================
-Test 10: Two dimensional array with arithmetic calculations on a real-world problem --> OK! 13.8 points; Afarin!!!
+Test 10: Two dimensional array with arithmetic calculations on a real-world problem --> Runtime error occurred (Exit code: 1)
+Although you got no points from this test, below is the output of the test (STDOUT):
+----------<BEGIN AUTO GENERATED OUTPUT>-----------
+
+Ok you have allocated the array so far.
+The answer is not right. There must be some problems...
+
+-----------<END AUTO GENERATED OUTPUT>------------
 ================================================================================================================
 
-Your final grade is: 67.5/100.0epoch: 1682162152
+Your final grade is: 0/100.0epoch: 1682162533
