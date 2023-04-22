@@ -1,4 +1,4 @@
-I finished judging your code on 20-04-2023 at 16:59:26.
+I finished judging your code on 22-04-2023 at 10:47:48.
 
 I ran your code on each test case separately! You can see the results below:
 
@@ -91,4 +91,4 @@ You couldn't realloc.
 -----------<END AUTO GENERATED OUTPUT>------------
 ================================================================================================================
 
-Your final grade is: 27.95/100.0epoch: 1682009967
+Your final grade is: 27.95/100.0epoch: 1682160468
