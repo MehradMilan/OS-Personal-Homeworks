@@ -153,7 +153,7 @@ void* mm_realloc(void* ptr, size_t size)
         return mm_malloc(size);
     }
 
-    current_block = get_block(ptr);
+    s_block_ptr current_block = get_block(ptr);
     if (current_block) {
         void *new_block = mm_malloc(size);
         if (new_block == NULL)
