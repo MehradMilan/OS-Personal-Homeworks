@@ -104,38 +104,28 @@ s_block_ptr extend_heap(s_block_ptr last, size_t s) {
 
 
 
-void *mm_malloc(size_t size) {
+void* mm_malloc(size_t size)
+{
     if (size == 0) {
         return NULL;
     }
 
     if (list_head == NULL) {
-        s_block_ptr init_block = extend_heap(NULL, 0);
-        if (!init_block) {
-            return NULL;
+        return extend_heap(NULL, size);
+    }
+
+	s_block_ptr prev = NULL;
+
+    for (s_block_ptr head = list_head; head; head = head->next) {
+        if (head->is_free == 1 && head->size >= size) {
+            head->is_free = 0;
+            split_block(head, size);
+			return head->ptr;
         }
-        list_head = init_block;
+        prev = head;
     }
 
-    s_block_ptr curr = list_head;
-    s_block_ptr prev = curr;
-
-    while (curr) {
-        if (curr->is_free && curr->size >= size) {
-            split_block(curr, size);
-            curr->is_free = 0;
-            return curr->ptr;
-        }
-        prev = curr;
-        curr = curr->next;
-    }
-
-    s_block_ptr new_block = extend_heap(prev, size);
-    if (!new_block) {
-        return NULL;
-    }
-
-    return new_block->ptr;
+    return extend_heap(prev, size);
 }
 
 
