@@ -1,4 +1,4 @@
-I finished judging your code on 22-04-2023 at 11:08:02.
+I finished judging your code on 22-04-2023 at 11:15:52.
 
 I ran your code on each test case separately! You can see the results below:
 
@@ -65,4 +65,4 @@ Test 9: Realloc complicated test --> OK! 17.5 points; Afarin!!!
 Test 10: Two dimensional array with arithmetic calculations on a real-world problem --> OK! 13.8 points; Afarin!!!
 ================================================================================================================
 
-Your final grade is: 67.5/100.0epoch: 1682161682
+Your final grade is: 67.5/100.0epoch: 1682162152
