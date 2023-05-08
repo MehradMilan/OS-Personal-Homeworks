@@ -2,3 +2,7 @@ HW0 Grade: 99.15
 HW0 Delay (Days): 0
 HW1 Grade: 100
 HW1 Delay (Days): 0
+HW2 Grade: 100
+HW2 Delay (Days): 2
+HW3 Grade: 99.5
+HW3 Delay (Days): 1
