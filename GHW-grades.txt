@@ -9,3 +9,7 @@ Group #,Design,Additional Qs,Total,Passed Tests,Total,Grade,Total,Quality,Commit
 ================ GHW2 ================
 Group #,Acquintance,Design (70),Additional Qs (30),Delay (hours),Total,Passed Tests,Total,Task 1,Task 2,Task 3,Total,Quality,Commits,Doc,Total,Total
 4,100,70,30,0,100,70.9,118.17,100,100,100,100,100,100,100,100,100
+
+================ GHW3 Fixed ================
+Group #,Design,Additional Qs,Total,Passed Tests,Total,Grade,Total,Quality,Commits,Doc,Total,Sum 2nd deadline,Final
+4,100,100,200,92.3,92.3,100,100,100,100,100,100,80.38,100
